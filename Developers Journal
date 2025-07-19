@@ -1,0 +1,9 @@
+3 things about this lab specifically
+
+* The abstraction was quite easy, the concept is not hard to understand but the use of super() was something that took some time to digest
+* Randy`s implementation was easy since It was supposed to choose any random available place from the board
+* Omola was quite hard, not because of the concept itself, but because I was thinking of things too far ahead to implement, instead of something easy and logical.
+
+-  for (Position pos : availableMoves) {
+
+This way of interation through lists is a bit new to me, useful for sure. I was used to the always so lame (for i; i < x; i++) for example
