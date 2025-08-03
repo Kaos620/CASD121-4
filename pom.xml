@@ -71,8 +71,7 @@
                 <configuration>
                     <mainClass>lab6.rpgUI.GameUI</mainClass>
                     <options>
-                        <option>--enable-native-access=javafx.scene</option>
-                        <option>--enable-native-access=javafx.application</option>
+                        <option>--enable-native-access=javafx.graphics</option>
                     </options>
                 </configuration>
             </plugin>

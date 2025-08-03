@@ -2,11 +2,15 @@ package lab6.rpgUI;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.geometry.Pos;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import lab6.rpgClasses.*;
 import lab6.rpgGame.GameRules;
 
@@ -16,15 +20,20 @@ public class GameUI extends Application {
     private final Player enemy = new Player("Enemy", GameClass.BARBARIAN);
     private final GameRules rules = new GameRules();
     private boolean isPlayerTurn = true;
+    private int roundCounter = 1;
 
     private final Label statusLabel = new Label("Welcome to the RPG Game!");
     private final TextArea battleLog = new TextArea();
     private final Button attackButton = new Button("Attack");
     private final Button restButton = new Button("Rest");
 
+    private final Label playerLabel = new Label();
+    private final Label enemyLabel = new Label();
+    private final FlowPane roundTracker = new FlowPane();
+
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("RPG battle simulation");
+        primaryStage.setTitle("RPG");
 
         Scene menuScene = createMenuScene(primaryStage);
         primaryStage.setScene(menuScene);
@@ -66,19 +75,28 @@ public class GameUI extends Application {
         battleLog.setEditable(false);
         battleLog.setPrefHeight(200);
 
+        roundTracker.setHgap(5);
+        roundTracker.setPadding(new Insets(0, 10, 0, 0));
+        roundTracker.setAlignment(Pos.CENTER_RIGHT);
+
+        HBox header = new HBox(20, playerLabel, statusLabel, enemyLabel, roundTracker);
+        header.setAlignment(Pos.CENTER);
+        header.setPadding(new Insets(10));
+
         HBox actionButtons = new HBox(10, attackButton, restButton);
         actionButtons.setAlignment(Pos.CENTER);
 
-        VBox layout = new VBox(10, statusLabel, battleLog, actionButtons);
+        VBox layout = new VBox(10, header, battleLog, actionButtons);
         layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new javafx.geometry.Insets(10));
+        layout.setPadding(new Insets(10));
 
         attackButton.setOnAction(e -> handlePlayerAction("attack"));
         restButton.setOnAction(e -> handlePlayerAction("rest"));
 
         updateBattleStatus("The battle begins!");
+        updateCharacterNameColors();
 
-        return new Scene(layout, 500, 350);
+        return new Scene(layout, 600, 400);
     }
 
     private void handlePlayerAction(String action) {
@@ -87,43 +105,74 @@ public class GameUI extends Application {
         if (action.equals("attack")) {
             int dmg = rules.attackTurn(player, enemy);
             updateBattleStatus("You attacked the enemy for " + dmg + " damage.");
-            updateBattleStatus("The enemy's current health is " + enemy.getCurrentHealth() + "!");
         } else if (action.equals("rest")) {
             rules.restTurn(player);
             updateBattleStatus("You rested and regained stamina.");
         }
 
         isPlayerTurn = false;
+        updateCharacterNameColors();
         updateBattleStatus("Enemy's turn...");
         handleEnemyTurn();
     }
 
-    private void handleEnemyTurn() {
-
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(1));
+    private void handleEnemyTurn() { //Enemy turn is always next to yours, most of the checks are here
+        PauseTransition pause = new PauseTransition(Duration.seconds(2)); // To make it look like the machine is taking time to think
         pause.setOnFinished(e -> {
-            if (enemy.getCurrentStamina() < 10) {
+            if (enemy.getCurrentStamina() < 3) {
                 rules.restTurn(enemy);
                 updateBattleStatus("Enemy rests and regains stamina.");
-                updateBattleStatus("Current health: " + enemy.getCurrentHealth()+ " Current stamina: " + enemy.getCurrentStamina() );
             } else {
                 int dmg = rules.attackTurn(enemy, player);
                 updateBattleStatus("Enemy attacked you for " + dmg + " damage.");
             }
 
-            updateBattleStatus("Your HP: " + player.getCurrentHealth() + "Enemy HP: "+ enemy.getCurrentHealth());
+            updateBattleStatus("Your HP: " + player.getCurrentHealth() + " | Enemy HP: " + enemy.getCurrentHealth());
+            updateBattleStatus("Your Stamina: " + player.getCurrentStamina() + " | Enemy Stamina: " + enemy.getCurrentStamina());
+
+            roundCounter++;
+            addRoundIndicator();
+
             isPlayerTurn = true;
+            updateCharacterNameColors();
 
             if (player.getCurrentHealth() <= 0 || enemy.getCurrentHealth() <= 0) {
                 endGame();
             }
-
         });
         pause.play();
     }
 
+    private void updateCharacterNameColors() { // Green is health, Yellow is hurt and Red is critical
+        Color playerColor = getHealthColor(player);
+        Color enemyColor = getHealthColor(enemy);
+
+        playerLabel.setText(player.getName());
+        playerLabel.setTextFill(playerColor);
+
+        enemyLabel.setText(enemy.getName());
+        enemyLabel.setTextFill(enemyColor);
+    }
+
+    private Color getHealthColor(Player p) {
+        double percent = getHealthPercentage(p);
+        if (percent <= 30) return Color.RED;
+        if (percent <= 60) return Color.GOLD;
+        return Color.LIMEGREEN;
+    }
+
+    private double getHealthPercentage(Player p) { // To help with the update of the health indicator by hp percentage
+        return ((double) p.getCurrentHealth() / p.getMaxHealth()) * 100;
+    }
+
+
+    private void addRoundIndicator() { //Round indicator is supposed to count the number of rounds
+        Circle circle = new Circle(5, Color.GRAY);
+        roundTracker.getChildren().add(circle);
+    }
+
     private void updateBattleStatus(String message) {
-        battleLog.appendText(message + "\n");
+        battleLog.appendText("Round " + roundCounter + ": " + message + "\n");
     }
 
     private void endGame() {

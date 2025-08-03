@@ -14,14 +14,14 @@ public class GameRules {
      */
 
     public int attackTurn(Character attacker, Character defender) {
-        int requiredStamina = 3;
+        int requiredStamina = 3; // Could be different for each class but I`ll leave 3 as the default
         if (attacker.getCurrentStamina() >= requiredStamina) {
             int damage = rand.nextInt(0 , attacker.getStrength());
-            if (damage == attacker.getStrength()) {
+            if (damage == attacker.getStrength()) { //Crit check
                 damage = attacker.getStrength() * 2;
                 System.out.println("A crit has been hit! Double damage: " + damage);
                 return damage;
-            }else if (damage == 0){
+            }else if (damage == 0){ // Crit fail check
                 attacker.setCurrentStamina(attacker.getCurrentStamina() - requiredStamina);
                 System.out.println("A critical failure has been hit! Lost double stamina: " + attacker.getCurrentStamina());
                 return damage;
@@ -43,8 +43,8 @@ public class GameRules {
      * Restores some stamina and maybe a bit of health to the attacker.
      */
     public void restTurn(Character character) {
-        int staminaRestored = rand.nextInt(2, character.getCurrentStamina() * 2);
-        int healthRestored = rand.nextInt(0, 11);
+        int staminaRestored = rand.nextInt(2, character.getMaxStamina() / 2); //Can restore until half the default
+        int healthRestored = rand.nextInt(2, character.getMaxHealth() / 2);
 
         int newStamina = Math.min(character.getMaxStamina(), character.getCurrentStamina() + staminaRestored);
         character.setCurrentStamina(newStamina);
