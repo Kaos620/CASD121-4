@@ -1,0 +1,50 @@
+Lab 1 -
+    * The objective was to build a code where a professor can register the students grades in a JSON file with an average grade calculated at the end.
+    * I thought of doing it separated by courses, nominating what which grade is for (mid terms, finals, etc) but I already asked for an extension,
+      if the professor asks to, I can complete it later.
+    * Most of the time spent in the code was by figuring out how the JSON works, had to use AI to get some help, also used it for the rounding of the average grade
+    * Mostly a very fun activity, I hope to come back to this code later and make it more complex, with more classes and better methods
+
+
+Lab 2 -
+
+* Wow this took longer then I expected! Very interesting activity
+* I had a really hard time doing this one because concepts were always harder to remember than doing the handy work. I'm still having a hard time understanding the code and some things
+it does even tho I've had previous experience
+
+* Some specific things about the Lab 2:
+    - I didn't do the number 4 "For every type or class referred to in the code, you must state which package that type/class belongs to and a brief description of the purpose of the class."
+    - JLabel imageLabel = new JLabel(new ImageIcon(image)) uses the image from the imageStream argument that has the class InputStream, but I wasn't able to understand how this really works
+    - The method e.printStackTrace() used in the try catch is new to me, seems interesting but I want to learn how it really is used
+
+Lab 3 -
+
+* We had many ideas about how to really do this lab, but most of them connected to the same thing
+* Iryna projected most of the essential parts, defined X and O as enums, we debated a bit about how the player would place the pieces, in the end we decided for the easiest which is defining but column and row location (0 1 or 2)
+* Karsten made the design of the board, somethings were altered in the end but his initial design was very solid and the logic well defined. 
+* I had never worked with enums before, Ira helped me a lot explaining me her work.
+* During the last moments a decided to add an option for the player to choose if they're starting as X or O. 
+
+Lab 5 -
+
+* Planned to use abstraction with a Player superclass and subclasses for human, random AI, and a simple Omola AI. Randy’s AI would pick moves randomly. Tried to keep Omola logical but not overcomplicated. Wanted to test the enhanced for-loop for cleaner iteration.
+* The abstraction was quite easy, the concept is not hard to understand but the use of super() was something that took some time to digest
+* Randy`s implementation was easy since It was supposed to choose any random available place from the board
+* Omola was quite hard, not because of the concept itself, but because I was thinking of things too far ahead to implement, instead of something easy and logical. In the end, just checking twice if the next move was "meaningful" was enough
+
+-  for (Position pos : availableMoves) {
+
+This way of interation through lists is a bit new to me, useful for sure. I was used to the always so lame (for i; i < x; i++) for example
+
+Lab 6 - 
+
+* When first assigned, I knew what I wanted to do with this lab, reuse the idea I had for an OOP assignment 2 years ago
+* The idea was to create a basic RPG battle simulation. There would be some classes, which change base values of the player like Health, Attack etc. The player would then fight a pre built enemy
+* This time my code was much more efficient
+* Character was built a superclass with the intent of having each enemy as a subclass, but due to time I prebuilt one somewhere else
+* The classes were defined as an Enum since all the different values for the class are defined by numbers
+* The logic behind the rules of the game were: You can either attack or rest, rest lets you regain health and stamina. Whenever you attack, you lose stamina, if you have less than required, you need to rest.
+* The damage for the attacks are not defined, they get the attack value of the Character and randomly goes from 0 to that value. If the damage is 0, the character loses double stamina, if it hits max damage, the damage is double.
+
+* The javaFX design behind the application was simple. A window to start the game, a text box for the game, 2 action buttons (attack and rest) and a counter of rounds with small circles in the upper right side of the screen. 
+* The names of the player and enemy go from green to red to simulate the current health situation of their character
